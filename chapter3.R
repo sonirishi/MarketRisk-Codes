@@ -97,3 +97,36 @@ VY <- 5
 p <- 0.25
 
 p*pnorm(-1,EX,VX) + (1-p)*pnorm(-1,EY,VY)
+
+##############
+
+library(mvtnorm)
+
+p1 <- 0.3
+p2 <- 0.5
+
+print(p1*p1 + (1-p1)*(1-p2) + p2*(1-p1) + p1*(1-p2))
+
+######### Sample Test on Covariance ##############
+
+library(Ecdat)
+data("CRSPday")
+
+return_data <- as.data.frame(CRSPday[,4:7])
+
+return_data$final <- 0.25*return_data$ge + 0.25*return_data$ibm + 0.25*return_data$mobil + 
+  0.25*return_data$crsp
+
+print(sd(return_data$final))
+
+cov_matrix <- cov(return_data[,1:4])
+
+eigen(cov_matrix)  # positive definite as all eigenvalues are positive
+
+sd_ind <- sqrt(0.25^2*(var(return_data$ge) + var(return_data$ibm) + var(return_data$mobil) + 
+  var(return_data$crsp) + 2*cov(return_data$ge,return_data$ibm) + 
+    2*cov(return_data$ge,return_data$mobil) + 2*cov(return_data$ge,return_data$crsp) + 
+    2*cov(return_data$ibm,return_data$mobil) + 2*cov(return_data$ibm,return_data$crsp) + 
+    2*cov(return_data$mobil,return_data$crsp)))
+
+##### Hence Proved that we dont really need to look at individual stocks in case of portfolio
